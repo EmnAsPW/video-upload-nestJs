@@ -1,11 +1,7 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsArray } from 'class-validator';
 
 export class CreateVideoDto {
     
-   @IsNotEmpty()
-   @IsString()
-   id: string;
-
   @IsString()
   @IsNotEmpty()
   title: string;
@@ -17,4 +13,7 @@ export class CreateVideoDto {
   @IsString()
   @IsNotEmpty()
   filename: string;
+
+  @IsArray()
+  tags: string[];
 }
