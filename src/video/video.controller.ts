@@ -47,9 +47,7 @@ export class VideoController {
     }
     return response.status(200).sendFile(video.filename, { root: 'uploads' });
   }
-
-
-
+  
   @Put('update/:id')
   async updateVideo(@Param('id') id: string, @Body() updateVideoDto: CreateVideoDto) {
     return this.videoService.update(id, updateVideoDto);
