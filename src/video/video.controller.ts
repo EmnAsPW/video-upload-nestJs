@@ -9,7 +9,7 @@ import * as path from 'path';
 
 
 const storage = diskStorage({
-  destination: 'C:\\Users\\emons\\Documents\\video-upload\\video-upload\\src\\uploads',
+  destination: 'C:\\Users\\emons\\Documents\\video-upload\\src\\uploads',
   filename: (req: any, file: { fieldname: string }, callback: (error: null, filename: string) => void) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     callback(null, file.fieldname + '-' + uniqueSuffix);
