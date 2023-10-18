@@ -9,7 +9,7 @@ async function bootstrap() {
   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
   app.enableCors();
 
-  await app.listen(3000);
+  await app.listen(3001);
   console.log("hello");
   
 }
