@@ -6,13 +6,15 @@ import { Response } from 'express';
 import { diskStorage } from 'multer';
 import { CreateVideoDto } from './dto/video.dto';
 import * as path from 'path';
+import { UpdateVideoDto } from './dto/update.dto';
+
+
 
 
 const storage = diskStorage({
-  destination: 'C:\\Users\\emons\\Documents\\video-upload\\src\\uploads',
-  filename: (req: any, file: { fieldname: string }, callback: (error: null, filename: string) => void) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    callback(null, file.fieldname + '-' + uniqueSuffix);
+  destination: 'C:\\Users\\emons\\Documents\\video-upload\\uploads', 
+  filename: (req: any, file: { originalname: string }, callback: (error: null, filename: string) => void) => {
+    callback(null, file.originalname); 
   },
 });
 
@@ -41,17 +43,33 @@ export class VideoController {
 
   @Get('/:id')
   async getVideo(@Param('id') id: string, @Res() response: Response) {
-    const video = await this.videoService.findOne(id);
-    if (!video) {
-      return response.status(404).json({ message: 'Video not found' });
+    //console.log("-----------", id, response)
+    try {
+      const video = await this.videoService.findOne(id);
+      if (!video) {
+        return response.status(404).json({ message: 'Video not found' });
+      }
+      return response.status(200).json({video})
+    } catch (error) {
+      return response.status(500).json({ message: 'Internal server error' });
     }
-    return response.status(200).sendFile(video.filename, { root: 'uploads' });
+  }
+
+  @Put('update/:id')
+  async updateVideo(@Param('id') id: string, @Body() updateVideoDto: UpdateVideoDto, @Res() response: Response) {
+    try {
+      const updatedVideo = await this.videoService.update(id, updateVideoDto);
+      
+      if (!updatedVideo) {
+        return response.status(404).json({ message: 'Video not found' });
+      }
+  
+      return response.status(200).json(updatedVideo);
+    } catch (error) {
+      return response.status(500).json({ message: 'Internal server error' });
+    }
   }
   
-  @Put('update/:id')
-  async updateVideo(@Param('id') id: string, @Body() updateVideoDto: CreateVideoDto) {
-    return this.videoService.update(id, updateVideoDto);
-  }
 
   @Delete('delete/:id')
   async deleteVideo(@Param('id') id: string) {
