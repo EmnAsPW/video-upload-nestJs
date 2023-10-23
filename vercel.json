@@ -1,10 +1,6 @@
 {
     "version":2,
    
-    "env":{
-        "MONGO_URL":"@mongodb+srv://emonsourov:haCSbuZrobyBXent@videodb.m3rgdgm.mongodb.net/?retryWrites=true&w=majority"
-    },
-
     "builds":[
        {
         "src":"src/main.ts",
