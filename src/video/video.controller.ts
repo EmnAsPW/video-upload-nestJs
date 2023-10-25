@@ -1,5 +1,5 @@
 
-import { Controller, Get, Post, Param, Body, Put, Delete, UseInterceptors, UploadedFile, Res } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Put, Delete, UseInterceptors, UploadedFile, Res, UseGuards } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { VideoService } from './video.service';
 import { Response } from 'express';
@@ -7,6 +7,7 @@ import { diskStorage } from 'multer';
 import { CreateVideoDto } from './dto/video.dto';
 import * as path from 'path';
 import { UpdateVideoDto } from './dto/update.dto';
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
 
 
 
@@ -40,7 +41,7 @@ export class VideoController {
   async getAllVideos() {
     return this.videoService.findAll();
   }
-
+  @UseGuards(JwtGuard)
   @Get('/:id')
   async getVideo(@Param('id') id: string, @Res() response: Response) {
     //console.log("-----------", id, response)
