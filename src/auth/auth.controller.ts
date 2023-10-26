@@ -1,18 +1,23 @@
-import { Body, Controller, HttpCode, HttpException, HttpStatus, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpException, HttpStatus, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ExistingUserDTO } from 'src/user/dtos/existing-user.dto';
 import { NewUserDTO } from 'src/user/dtos/new-user.dto';
 import { UserDetails } from 'src/user/user-details.interface';
 import { AuthService } from './auth.service';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { v4 as uuidv4 } from 'uuid';
+import path = require('path');
+import { FilesInterceptor } from '@nestjs/platform-express';
+
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('signup')
-  @UseInterceptors(FileInterceptor('profilePicture'))
+  // @ts-ignore
+  @UseInterceptors(FilesInterceptor())
   async register(
-    @UploadedFile() file: Express.Multer.File,
+    //@UploadedFile() file: Express.Multer.File,
     @Body() user: NewUserDTO,
   ): Promise<UserDetails | null> {
     try {
@@ -45,3 +50,24 @@ export class AuthController {
     }
   }
 }
+
+/*
+@post('/uploadimage')
+@UseInterceptors(FilesInterceptor('image', {
+  storage:diskStorage({
+  destination: './uploads/profileimages',
+  filename: (req, file, cb) => {
+    const filename: string = path.parse(file.originalname).name.replace(/\s/g, '') + Date.now();
+    const extension: string = path.parse(file.originalname).ext;
+    cb(null, `${filename}${extension}`);
+  },
+}),
+}))
+
+UploadedFile(@Res res, @UploadedFile() file){
+  return resizeBy.status(HttpStatus.OK).json({
+    success: true;
+    data: file.path
+  });
+}
+*/

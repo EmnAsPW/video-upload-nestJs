@@ -6,6 +6,7 @@ import { ExistingUserDTO } from './../user/dtos/existing-user.dto';
 import { UserService } from './../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 
+
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
@@ -13,7 +14,7 @@ export class AuthService {
   constructor(private userService: UserService, private jwtService: JwtService) {}
 
   async hashPassword(password: string): Promise<string> {
-    return bcrypt.hash(password, 12);
+    return bcrypt.hash(password, 10);
   }
 
   async signup(user: Readonly<NewUserDTO>): Promise<UserDetails | any> {
@@ -23,19 +24,14 @@ export class AuthService {
     if (!email.endsWith('@gmail.com')) {
       throw new HttpException('Only Gmail addresses are allowed for registration', HttpStatus.BAD_REQUEST);
     }
-
     if (password !== confirmPassword) {
       throw new HttpException('Password and Confirm Password do not match', HttpStatus.BAD_REQUEST);
     }
-
     const existingUser = await this.userService.findByEmail(email);
-
     if (existingUser) {
       throw new HttpException('An account with that email already exists!', HttpStatus.CONFLICT);
     }
-
     const hashedPassword = await this.hashPassword(password);
-
     try {
       const newUser = await this.userService.create(name, email, hashedPassword, confirmPassword);
       return this.userService._getUserDetails(newUser);
@@ -57,11 +53,9 @@ export class AuthService {
     }
 
     const doesPasswordMatch = await this.doesPasswordMatch(password, user.password);
-
     if (!doesPasswordMatch) {
       return null;
     }
-
     return this.userService._getUserDetails(user);
   }
 

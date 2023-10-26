@@ -15,6 +15,7 @@ export class UserService {
       id: user._id,
       name: user.name,
       email: user.email,
+     // imageUrl: user.imageUrl,
     };
   }
 
@@ -33,12 +34,14 @@ export class UserService {
     email: string,
     password: string,
     confirmPassword:string,
+    //profilePicture:any,
   ): Promise<UserDocument> {
     const newUser = new this.userModel({
       name,
       email,
       password,
       confirmPassword,
+      //profilePicture
     });
     return newUser.save();
   }

@@ -3,5 +3,5 @@ export class NewUserDTO {
     email: string;
     password: string;
     confirmPassword: string;
-    profilePicture: any;
+    // profilePicture: any;
 }
