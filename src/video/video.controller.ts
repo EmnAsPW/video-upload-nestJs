@@ -1,5 +1,5 @@
 
-import { Controller, Get, Post, Param, Body, Put, Delete, UseInterceptors, UploadedFile, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Put, Delete, UseInterceptors, UploadedFile, Res, UseGuards, Query } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { VideoService } from './video.service';
 import { Response } from 'express';
@@ -41,7 +41,7 @@ export class VideoController {
   async getAllVideos() {
     return this.videoService.findAll();
   }
-  @UseGuards(JwtGuard)
+  //@UseGuards(JwtGuard)
   @Get('/:id')
   async getVideo(@Param('id') id: string, @Res() response: Response) {
     //console.log("-----------", id, response)
@@ -76,4 +76,15 @@ export class VideoController {
   async deleteVideo(@Param('id') id: string) {
     return this.videoService.remove(id);
   }
+
+
+  @Get('search/:query')
+  async searchVideos(@Query('query') query: string) {
+    if (!query) {
+      return { message: 'Search query is required.' };
+    }
+    const searchResults = await this.videoService.searchVideos(query);
+    return searchResults;
+}
+
 }

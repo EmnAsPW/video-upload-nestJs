@@ -32,5 +32,17 @@ export class VideoService {
     return this.videoModel.findByIdAndRemove(id);
   }
 
+  async searchVideos(query: string): Promise<Video[]> {
+    const searchResults = await this.videoModel
+      .find({
+        $or: [
+          { title: { $regex: query, $options: 'i' } }, 
+          { tags: { $in: [query] } }, 
+        ],
+      })
+      .exec();
+    return searchResults;
+  }
+
   
 }

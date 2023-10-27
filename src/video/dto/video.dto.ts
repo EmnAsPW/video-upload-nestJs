@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsArray } from 'class-validator';
+import { IsString, IsNotEmpty, IsArray, IsOptional } from 'class-validator';
 
 export class CreateVideoDto {
   @IsString()
@@ -15,4 +15,8 @@ export class CreateVideoDto {
 
   @IsArray()
   tags: string[];
+
+  @IsOptional() // Search query is optional
+  @IsString()
+  query: string;
 }
