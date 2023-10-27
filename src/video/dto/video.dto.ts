@@ -16,7 +16,7 @@ export class CreateVideoDto {
   @IsArray()
   tags: string[];
 
-  @IsOptional() // Search query is optional
+  @IsOptional()
   @IsString()
   query: string;
 }

@@ -1,5 +1,5 @@
 
-import { Controller, Get, Post, Param, Body, Put, Delete, UseInterceptors, UploadedFile, Res, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Put, Delete, UseInterceptors, UploadedFile, Res, UseGuards, Query, Req } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { VideoService } from './video.service';
 import { Response } from 'express';
@@ -41,6 +41,14 @@ export class VideoController {
   async getAllVideos() {
     return this.videoService.findAll();
   }
+
+  @Get('search')
+  async getSearchVideos(@Req() req: any) {
+    const searchResults = await this.videoService.searchVideos(req.query.title, req.query.tags);
+    return searchResults
+  }
+
+
   //@UseGuards(JwtGuard)
   @Get('/:id')
   async getVideo(@Param('id') id: string, @Res() response: Response) {
@@ -78,13 +86,16 @@ export class VideoController {
   }
 
 
-  @Get('search/:query')
-  async searchVideos(@Query('query') query: string) {
-    if (!query) {
-      return { message: 'Search query is required.' };
-    }
-    const searchResults = await this.videoService.searchVideos(query);
-    return searchResults;
-}
+//   @Get('search/')
+//   async searchVideos(@Query() params: any) {
+//     console.log("🚀 ~ file: video.controller.ts:83 ~ VideoController ~ searchVideos ~ params:", params)
+//     // console.log("🚀 ~ file: video.controller.ts:83 ~ VideoController ~ searchVideos ~ query:", query)
+//     // if (!query) {
+//     //   return { message: 'Search query is required.' };
+//     // }
+//     // const searchResults = await this.videoService.searchVideos(query);
+//     // return searchResults;
+//     return "Hello world"
+// }
 
 }
