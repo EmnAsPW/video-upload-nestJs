@@ -7,5 +7,5 @@ export class CreateProfileImageDto {
 
   @IsString()
   @IsNotEmpty()
-  imageUrl: string;
+  imageUrl: any;
 }

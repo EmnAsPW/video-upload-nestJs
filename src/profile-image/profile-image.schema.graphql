@@ -1,0 +1,26 @@
+type ProfileImage {
+  id: ID!
+  userId: String!
+  imageUrl: String!
+}
+
+type Query {
+  profileImages: [ProfileImage!]!
+  profileImage(id: ID!): ProfileImage
+}
+
+type Mutation {
+  uploadProfileImage(input: CreateProfileImageInput!): ProfileImage
+  updateProfileImage(id: ID!, input: UpdateProfileImageInput!): ProfileImage
+  deleteProfileImage(id: ID!): ProfileImage
+}
+
+input CreateProfileImageInput {
+  userId: String!
+  imageUrl: String!
+}
+
+input UpdateProfileImageInput {
+  id: ID!
+  imageUrl: String!
+}
