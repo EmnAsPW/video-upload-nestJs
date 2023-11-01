@@ -2,7 +2,6 @@ import * as mongoose from 'mongoose';
 import { Schema, model } from 'mongoose';
 
 export const VideoSchema = new mongoose.Schema({
-  
   title: { type: String, required: true },
   description: { type: String, required: true },
   filename: { type: String, required: true },
@@ -10,7 +9,7 @@ export const VideoSchema = new mongoose.Schema({
 });
 
 export interface Video {
- //id: string;
+  id: string;
   title: string;
   description: string;
   filename: string;

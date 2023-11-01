@@ -1,5 +1,18 @@
-
-import { Controller, Get, Post, Param, Body, Put, Delete, UseInterceptors, UploadedFile, Res, UseGuards, Query, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+  Put,
+  Delete,
+  UseInterceptors,
+  UploadedFile,
+  Res,
+  UseGuards,
+  Query,
+  Req,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { VideoService } from './video.service';
 import { Response } from 'express';
@@ -9,13 +22,14 @@ import * as path from 'path';
 import { UpdateVideoDto } from './dto/update.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 
-
-
-
 const storage = diskStorage({
-  destination: 'C:\\Users\\emons\\Documents\\video-upload\\uploads', 
-  filename: (req: any, file: { originalname: string }, callback: (error: null, filename: string) => void) => {
-    callback(null, file.originalname); 
+  destination: 'C:\\Users\\emons\\Documents\\video-upload\\uploads',
+  filename: (
+    req: any,
+    file: { originalname: string },
+    callback: (error: null, filename: string) => void,
+  ) => {
+    callback(null, file.originalname);
   },
 });
 
@@ -27,13 +41,13 @@ export class VideoController {
   @UseInterceptors(FileInterceptor('file', { storage: storage }))
   async uploadVideo(
     @UploadedFile() file: Express.Multer.File,
-    @Body() createVideoDto: CreateVideoDto
+    @Body() createVideoDto: CreateVideoDto,
   ) {
-    console.log("------------", file)
+    console.log('------------', file);
     if (!file) {
       return { message: 'No file uploaded.' };
     }
-    //createVideoDto.id = Date.now().toString(); 
+    //createVideoDto.id = Date.now().toString();
     createVideoDto.filename = file.originalname;
     return this.videoService.create(createVideoDto);
   }
@@ -44,10 +58,12 @@ export class VideoController {
 
   @Get('search')
   async getSearchVideos(@Req() req: any) {
-    const searchResults = await this.videoService.searchVideos(req.query.title, req.query.tags);
-    return searchResults
+    const searchResults = await this.videoService.searchVideos(
+      req.query.title,
+      req.query.tags,
+    );
+    return searchResults;
   }
-
 
   //@UseGuards(JwtGuard)
   @Get('/:id')
@@ -58,44 +74,45 @@ export class VideoController {
       if (!video) {
         return response.status(404).json({ message: 'Video not found' });
       }
-      return response.status(200).json({video})
+      return response.status(200).json({ video });
     } catch (error) {
       return response.status(500).json({ message: 'Internal server error' });
     }
   }
 
   @Put('update/:id')
-  async updateVideo(@Param('id') id: string, @Body() updateVideoDto: UpdateVideoDto, @Res() response: Response) {
+  async updateVideo(
+    @Param('id') id: string,
+    @Body() updateVideoDto: UpdateVideoDto,
+    @Res() response: Response,
+  ) {
     try {
       const updatedVideo = await this.videoService.update(id, updateVideoDto);
-      
+
       if (!updatedVideo) {
         return response.status(404).json({ message: 'Video not found' });
       }
-  
+
       return response.status(200).json(updatedVideo);
     } catch (error) {
       return response.status(500).json({ message: 'Internal server error' });
     }
   }
-  
 
   @Delete('delete/:id')
   async deleteVideo(@Param('id') id: string) {
     return this.videoService.remove(id);
   }
 
-
-//   @Get('search/')
-//   async searchVideos(@Query() params: any) {
-//     console.log("🚀 ~ file: video.controller.ts:83 ~ VideoController ~ searchVideos ~ params:", params)
-//     // console.log("🚀 ~ file: video.controller.ts:83 ~ VideoController ~ searchVideos ~ query:", query)
-//     // if (!query) {
-//     //   return { message: 'Search query is required.' };
-//     // }
-//     // const searchResults = await this.videoService.searchVideos(query);
-//     // return searchResults;
-//     return "Hello world"
-// }
-
+  //   @Get('search/')
+  //   async searchVideos(@Query() params: any) {
+  //     console.log("🚀 ~ file: video.controller.ts:83 ~ VideoController ~ searchVideos ~ params:", params)
+  //     // console.log("🚀 ~ file: video.controller.ts:83 ~ VideoController ~ searchVideos ~ query:", query)
+  //     // if (!query) {
+  //     //   return { message: 'Search query is required.' };
+  //     // }
+  //     // const searchResults = await this.videoService.searchVideos(query);
+  //     // return searchResults;
+  //     return "Hello world"
+  // }
 }

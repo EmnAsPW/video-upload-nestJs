@@ -19,4 +19,5 @@ export class CreateVideoDto {
   @IsOptional()
   @IsString()
   query: string;
+  url: string;
 }
